@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-products-table-2026-10-08
+      author: Hamid Guluzadeh
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: VARCHAR(36)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: VARCHAR(36)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: sku
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: price
+                  type: DECIMAL(5, 2)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: products
+            baseColumnNames: category_id
+            constraintName: fk_products_categories
+            referencedTableName: categories
+            referencedColumnNames: id
