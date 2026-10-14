@@ -12,18 +12,30 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProductMapper {
 
+    @Mapping(target = "categoryId", source = "category.id")
+    @Mapping(target = "categoryName", source = "category.name")
+    @Mapping(target = "currentQuantity", ignore = true)
+    @Mapping(target = "minStockLevel", ignore = true)
     ProductResponseDto mapEntityToResponse(ProductEntity productEntity);
 
-    @Mapping(target = "category", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     ProductEntity mapRequestToEntity(ProductRequestDto request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "category", ignore = true)
-    @Mapping(target = "sku", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     void updateEntityFromRequest(ProductRequestDto request, @MappingTarget ProductEntity productEntity);
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", source = "productEntity.id")
+    @Mapping(target = "categoryId", source = "productEntity.category.id")
+    @Mapping(target = "categoryName", source = "productEntity.category.name")
+    @Mapping(target = "currentQuantity", source = "inventoryStockEntity.currentQuantity")
+    @Mapping(target = "minStockLevel", source = "inventoryStockEntity.minStockLevel")
+    @Mapping(target = "createdAt", source = "productEntity.createdAt")
+    @Mapping(target = "updatedAt", source = "productEntity.updatedAt")
     ProductResponseDto mapEntityToResponseWithStock(ProductEntity productEntity, InventoryStockEntity inventoryStockEntity);
-
 }

@@ -9,8 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface InventoryTransactionMapper {
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "productId", source = "product.id")
-    InventoryTransactionResponseDto mapEntityToResponse(InventoryTransactionEntity inventoryTransactionEntity);
+    @Mapping(target = "productName", source = "product.name")
+    @Mapping(target = "categoryId", source = "product.category.id")
+    @Mapping(target = "categoryName", source = "product.category.name")
+    InventoryTransactionResponseDto mapEntityToResponse(InventoryTransactionEntity transaction);
 
 }

@@ -62,6 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         CategoryEntity categoryEntity = categoryMapper.mapRequestToEntity(request);
+        categoryEntity.setParent(parentCategory);
         categoryEntity.setCreatedAt(Instant.now());
 
         CategoryEntity savedEntity = categoryRepository.save(categoryEntity);
@@ -75,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
 
-        if (categoryEntity.getName().equalsIgnoreCase(request.name())
+        if (!categoryEntity.getName().equalsIgnoreCase(request.name())
                 && categoryRepository.existsByName(request.name())) {
             throw new ResourceAlreadyExistsException(request.name() + " category already exists!");
         }
@@ -91,7 +92,8 @@ public class CategoryServiceImpl implements CategoryService {
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
         }
 
-        categoryEntity = categoryMapper.mapRequestToEntity(request);
+        categoryMapper.updateEntityFromRequest(request, categoryEntity);
+        categoryEntity.setParent(parentCategory);
 
         CategoryEntity savedEntity = categoryRepository.save(categoryEntity);
 
