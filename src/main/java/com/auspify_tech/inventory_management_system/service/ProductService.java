@@ -10,13 +10,15 @@ public interface ProductService {
 
     Page<ProductResponseDto> getProductsByCategory(String categoryId, int page, int size);
 
+    Page<ProductResponseDto> searchProducts(String keyword, int page, int size);
+
     ProductResponseDto getProductBySku(String sku);
 
     ProductResponseDto getProductById(String productId);
 
     ProductResponseDto addProduct(ProductRequestDto request);
 
-    ProductResponseDto updateProduct(ProductRequestDto request);
+    ProductResponseDto updateProduct(String productId, ProductRequestDto request);
 
     void deleteProduct(String productId);
 

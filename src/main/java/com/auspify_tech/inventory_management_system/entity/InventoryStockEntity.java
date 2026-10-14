@@ -1,8 +1,8 @@
 package com.auspify_tech.inventory_management_system.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -11,6 +11,10 @@ import java.time.Instant;
 @Table(name = "inventory_stocks")
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class InventoryStockEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

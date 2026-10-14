@@ -12,6 +12,7 @@ import java.time.Instant;
 @Table(name = "inventory_transactions")
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
