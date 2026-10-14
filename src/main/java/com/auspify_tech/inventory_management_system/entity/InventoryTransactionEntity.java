@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -29,6 +30,9 @@ public class InventoryTransactionEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", length = 50, nullable = false, updatable = false)
     OperationType transactionType;
+
+    @Column(name = "unit_price", precision = 5, scale = 2, updatable = false)
+    BigDecimal unitPrice;
 
     @Column(name = "quantity", nullable = false, updatable = false)
     Integer quantity;

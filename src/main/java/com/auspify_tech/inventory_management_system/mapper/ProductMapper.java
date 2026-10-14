@@ -20,15 +20,10 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "category", ignore = true)
-    @Mapping(target = "stock", ignore = true)
+    @Mapping(target = "sku", ignore = true)
     void updateEntityFromRequest(ProductRequestDto request, @MappingTarget ProductEntity productEntity);
 
-    @Mapping(target = "id", source = "product.id")
-    @Mapping(target = "name", source = "product.name")
-    @Mapping(target = "categoryId", source = "product.category.id")
-    @Mapping(target = "categoryName", source = "product.category.name")
-    @Mapping(target = "currentQuantity", source = "stock.currentQuantity", defaultValue = "0")
-    @Mapping(target = "minStockLevel", source = "stock.minStockLevel", defaultValue = "0")
+    @Mapping(target = "id", ignore = true)
     ProductResponseDto mapEntityToResponseWithStock(ProductEntity productEntity, InventoryStockEntity inventoryStockEntity);
 
 }

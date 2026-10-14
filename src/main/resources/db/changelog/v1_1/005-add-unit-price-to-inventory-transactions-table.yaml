@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-add-unit-priceto-inventory-transactions-2026-10-14
+      author: Hamid Guluzadeh
+      changes:
+        - addColumn:
+            tableName: inventory_transactions
+            columns:
+              - column:
+                  name: unit_price
+                  type: DECIMAL(5, 2)
