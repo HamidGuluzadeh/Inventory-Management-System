@@ -13,6 +13,7 @@ public interface InventoryTransactionMapper {
     @Mapping(target = "productName", source = "product.name")
     @Mapping(target = "categoryId", source = "product.category.id")
     @Mapping(target = "categoryName", source = "product.category.name")
+    @Mapping(target = "totalSum", expression = "java(transaction.getUnitPrice() == null || transaction.getQuantity() == null ? null : transaction.getUnitPrice().multiply(java.math.BigDecimal.valueOf(transaction.getQuantity())))")
     InventoryTransactionResponseDto mapEntityToResponse(InventoryTransactionEntity transaction);
 
 }

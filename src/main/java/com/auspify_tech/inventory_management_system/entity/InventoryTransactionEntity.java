@@ -46,7 +46,4 @@ public class InventoryTransactionEntity {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     Instant createdAt;
-
-    @Column(name = "updated_at")
-    Instant updatedAt;
 }

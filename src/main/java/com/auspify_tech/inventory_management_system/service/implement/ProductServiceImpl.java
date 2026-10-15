@@ -27,6 +27,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
 
         Page<ProductEntity> productEntities = productRepository.findAll(pageable);
 
-        return productEntities.map(productMapper::mapEntityToResponse);
+        return mapWithStock(productEntities);
     }
 
     @Override
@@ -53,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
 
         Page<ProductEntity> productEntities = productRepository.findAllByCategoryId(categoryId, pageable);
 
-        return productEntities.map(productMapper::mapEntityToResponse);
+        return mapWithStock(productEntities);
     }
 
     @Override
@@ -62,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 
         Page<ProductEntity> productEntities = productRepository.searchProducts(keyword, pageable);
 
-        return productEntities.map(productMapper::mapEntityToResponse);
+        return mapWithStock(productEntities);
     }
 
     @Override
@@ -70,7 +74,8 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = productRepository.findBySku(sku)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with SKU: " + sku + " not found!"));
 
-        return productMapper.mapEntityToResponse(productEntity);
+        return productMapper.mapEntityToResponseWithStock(productEntity,
+                inventoryStockRepository.findByProductId(productEntity.getId()).orElse(null));
     }
 
     @Override
@@ -78,7 +83,8 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
 
-        return productMapper.mapEntityToResponse(productEntity);
+        return productMapper.mapEntityToResponseWithStock(productEntity,
+                inventoryStockRepository.findByProductId(productEntity.getId()).orElse(null));
     }
 
     @Override
@@ -106,13 +112,14 @@ public class ProductServiceImpl implements ProductService {
         inventoryStockRepository.save(inventoryStockEntity);
 
         if (inventoryStockEntity.getCurrentQuantity() > 0) {
-            BigDecimal totalAmount = request.price().multiply(BigDecimal.valueOf(inventoryStockEntity.getCurrentQuantity()));
 
             InventoryTransactionEntity transaction = InventoryTransactionEntity.builder()
                     .product(savedProductEntity)
                     .transactionType(OperationType.INBOUND)
+                    .unitPrice(request.price())
                     .quantity(inventoryStockEntity.getCurrentQuantity())
-                    .notes("Məhsul sistemə əlavə edilərkən daxil edilən ilkin anbar qalığı")
+                    .transactionDate(Instant.now())
+                    .notes("Initial stock entered when the product was created")
                     .build();
 
             inventoryTransactionRepository.save(transaction);
@@ -165,5 +172,15 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.deleteById(productId);
+    }
+
+    private Page<ProductResponseDto> mapWithStock(Page<ProductEntity> productEntities) {
+        List<String> productIds = productEntities.getContent().stream().map(ProductEntity::getId).toList();
+        if (productIds.isEmpty()) {
+            return productEntities.map(productMapper::mapEntityToResponse);
+        }
+        Map<String, InventoryStockEntity> stocks = inventoryStockRepository.findAllByProductIdIn(productIds).stream()
+                .collect(Collectors.toMap(stock -> stock.getProduct().getId(), Function.identity()));
+        return productEntities.map(product -> productMapper.mapEntityToResponseWithStock(product, stocks.get(product.getId())));
     }
 }

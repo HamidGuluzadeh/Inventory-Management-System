@@ -7,12 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface InventoryStockRepository extends JpaRepository<InventoryStockEntity, String> {
 
     Optional<InventoryStockEntity> findByProductId(String productId);
+
+    List<InventoryStockEntity> findAllByProductIdIn(Collection<String> productIds);
 
     @Query("SELECT s FROM InventoryStockEntity s WHERE s.currentQuantity <= s.minStockLevel")
     Page<InventoryStockEntity> findLowStockProducts(Pageable pageable);

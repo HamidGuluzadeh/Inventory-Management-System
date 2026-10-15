@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anbar · Inventory Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><span class="logo"></span><div><b>Anbar</b><small>Inventory management</small></div></div>
+    <nav id="nav"></nav>
+  </aside>
+  <main>
+    <header>
+      <h1 id="title">Dashboard</h1>
+      <div class="row">
+        <button class="btn ghost" id="api">API URL</button>
+        <button class="btn ghost" id="theme" aria-label="Theme">Theme</button>
+      </div>
+    </header>
+    <section id="view"></section>
+  </main>
+</div>
+<div id="modal" class="modal" hidden></div>
+<div id="toasts"></div>
+<script src="js/app.js"></script>
+</body>
+</html>
